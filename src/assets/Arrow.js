@@ -2,12 +2,8 @@ import React from 'react'
 
 
 export default function Arrow() {
-    return ( <svg
-        width="24px"
-        height="24px"
-        viewBox="0 0 1024 1024"
-        data-aut-id="icon"
-        fillRule="evenodd"
+    return ( <svg width="24px"  height="24px"
+        viewBox="0 0 1024 1024" data-aut-id="icon"  fillRule="evenodd"
       >
         <path
           className="rui-77aaa"
