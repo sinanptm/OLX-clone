@@ -19,7 +19,7 @@
   .signupParentDiv button {
     width: 100%;
     height: 48px;
-    /* border-color: transparent; */
+    border-color: transparent;
     background-color: #002f34;
     color: whitesmoke;
     font-weight: 900;
@@ -35,4 +35,17 @@
     justify-content: center;
     cursor: pointer;
   }
+
+  label{
+    font-size: 18;
+    font-weight: 700;
+    color: #002f34;
+  }
   
+.input {
+  width: 300px; /* Set the width of the input fields */
+  height: 33px; /* Set the height of the input fields */
+  font-size: 16px; /* Set the font size of the input fields */
+  padding: 8px; /* Set padding inside the input fields */
+  margin-bottom: 14px; /* Add some space between input fields */
+}

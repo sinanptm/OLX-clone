@@ -1,17 +1,10 @@
-import React from 'react';
+import  Route  from './routers';
 import './App.css';
 
-/**
- * ?  =====Import Components=====
- */
-import Home from './Pages/Home';
+
 
 function App() {
-  return (
-    <div>
-      <Home />
-    </div>
-  );
+  return <Route />
 }
 
 export default App;
