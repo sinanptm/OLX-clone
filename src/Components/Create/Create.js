@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import './Create.css';
-import Header from '../Header/Header';
+import Header from '../HeaderFooter/Header';
 
 const Create = () => {
   return (

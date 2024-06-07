@@ -5,11 +5,11 @@
 }
 .bannerParentDiv .bannerChildDiv .menuBar {
   display: flex;
-  padding: 10px 16px 1px 16px;
+  padding: 10px 16px 1px 170px;
 }
 
 .bannerParentDiv .bannerChildDiv .menuBar span {
-
+  
 }
 
 .bannerParentDiv .bannerChildDiv .menuBar .categoryMenu span {

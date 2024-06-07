@@ -9,6 +9,7 @@ import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
+import { useAuth } from '../../AuthContext'
 function Header() {
 const history = useNavigate()
   const handleLogout=()=>{
@@ -16,6 +17,9 @@ const history = useNavigate()
       history('/login');
     });
   }
+
+  const { user } = useAuth();
+
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -43,7 +47,13 @@ const history = useNavigate()
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <Link onClick={handleLogout}>logout</Link>
+          {
+            user? (
+              <Link onClick={handleLogout}>logout</Link>
+            ) : (
+              <Link to="/login">login</Link>
+            )
+          }
           <hr />
         </div>
 

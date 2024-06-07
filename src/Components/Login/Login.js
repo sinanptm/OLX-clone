@@ -1,4 +1,3 @@
-// src/components/Login/Login.js
 import React, { useState } from 'react';
 import { auth } from '../../firebase/config';
 import { Link } from 'react-router-dom';
@@ -13,18 +12,26 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email.trim()) {
+      toast.error("Please enter your email", { position: "top-right" });
+      return;
+    }
+
+    if (!password.trim()) {
+      toast.error("Please enter your password", { position: "top-right" });
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success("User Logged In Successfully", {
-          position: "top-right",
-      });
-      console.log('done');
+      toast.success("✅ Logged in ", { position: "top-right" ,autoClose: 2000});
+
     } catch (error) {
-      toast.error(error.message, {
-        position: "top-right",
-      });
+      if(error.code=='auth/invalid-credential')toast.error("Email or Password is incorrect", { position: "top-right" });
+      else toast.error(error.code)
     }
-  }
+  };
 
   return (
     <div>

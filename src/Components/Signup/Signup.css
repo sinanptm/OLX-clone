@@ -49,3 +49,13 @@
   padding: 8px; /* Set padding inside the input fields */
   margin-bottom: 14px; /* Add some space between input fields */
 }
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.input.error {
+  border-color: red;
+}

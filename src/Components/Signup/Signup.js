@@ -1,4 +1,3 @@
-// src/components/Signup/Signup.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../olx-logo.png';
@@ -13,13 +12,47 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState({});
+
+  const handleUserName = (e) => {
+    setUserName(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePhone = (e) => {
+    setPhone(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError({}); 
 
     try {
+      // Validate form fields
+      if (!userName.trim()) {
+        setError({ field: 'userName', message: 'Username is required' });
+        return;
+      }
+      if (!email.trim()) {
+        setError({ field: 'email', message: 'Email is required' });
+        return;
+      }
+      if (!phone.trim()) {
+        setError({ field: 'phone', message: 'Phone number is required' });
+        return;
+      }
+      if (phone.length !== 10) {
+        setError({ field: 'phone', message: 'Phone number should be 10 digits' });
+        return;
+      }
+      if (!password.trim()) {
+        setError({ field: 'password', message: 'Password is required' });
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       await setDoc(doc(db, 'users', user.uid), {
@@ -28,16 +61,17 @@ export default function Signup() {
         phone
       });
 
-      console.log('done');
       toast.success("Registered successfully",{
         position:'top-center',
       })
     } catch (error) {
-      setError(error.message);
-      console.error('Error creating user or saving data:', error);
-      toast.error(error.message,{
-        position:'top-center',
-      })
+      console.log(JSON.stringify(error));
+      if(error.code == "auth/email-already-in-use"){
+        toast.error('You are already a user, Please login',{
+          position:'top-center',
+        })
+        
+      }
     }
   };
 
@@ -48,9 +82,9 @@ export default function Signup() {
         <label htmlFor="username">Username</label>
         <br />
         <input
-          className="input"
+          className={`input ${error.field === 'userName' ? 'error' : ''}`}
           value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          onChange={handleUserName}
           type="text"
           id="username"
           name="username"
@@ -60,9 +94,9 @@ export default function Signup() {
         <label htmlFor="email">Email</label>
         <br />
         <input
-          className="input"
+          className={`input ${error.field === 'email' ? 'error' : ''}`}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmail}
           type="email"
           id="email"
           name="email"
@@ -72,9 +106,9 @@ export default function Signup() {
         <label htmlFor="phone">Phone</label>
         <br />
         <input
-          className="input"
+          className={`input ${error.field === 'phone' ? 'error' : ''}`}
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handlePhone}
           type="tel"
           id="phone"
           name="phone"
@@ -85,7 +119,7 @@ export default function Signup() {
         <label htmlFor="password">Password</label>
         <br />
         <input
-          className="input"
+          className={`input ${error.field === 'password' ? 'error' : ''}`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
@@ -95,8 +129,7 @@ export default function Signup() {
           required
         />
         <br />
-        <br />
-        {error && <div className="error">{error}</div>}
+        {error.message && <div className="error">{error.message}</div>} {/* Render error message */}
         <button type="submit">Signup</button>
       </form>
       <Link to={'/login'}>Login</Link>
