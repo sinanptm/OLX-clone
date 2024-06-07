@@ -7,16 +7,18 @@ const Login = lazy(() => import("./Pages/Login"));
 const ViewPost = lazy(() => import("./Pages/ViewPost"));
 const Home = lazy(() => import("./Pages/Home"));
 const Signup = lazy(() => import("./Pages/Signup"));
+const Create = lazy(() => import("./Pages/Create"));
 
 const AppRouter = () => {
   const { user } = useAuth();
 
   const router = createBrowserRouter([
-    { path: "/", element: user ? <Navigate to="/home" /> : <Login /> },
+    { path: "/", element: !user ? <Navigate to="/home" /> : <Login /> },
     { path: "/home", element: <Home /> },
+    { path: "/create", element: <Create /> },
     { path: "/viewpost", element: <ViewPost /> },
-    { path: "/login", element: user ? <Navigate to="/home" /> : <Login /> },
-    { path: "/signup", element: user ? <Navigate to="/home" /> : <Signup /> },
+    { path: "/login", element: !user ? <Navigate to="/home" /> : <Login /> },
+    { path: "/signup", element: !user ? <Navigate to="/home" /> : <Signup /> },    
   ]);
 
   const spinnerStyle = {

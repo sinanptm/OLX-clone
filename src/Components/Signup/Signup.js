@@ -65,13 +65,12 @@ export default function Signup() {
         position:'top-center',
       })
     } catch (error) {
-      console.log(JSON.stringify(error));
-      if(error.code == "auth/email-already-in-use"){
-        toast.error('You are already a user, Please login',{
-          position:'top-center',
-        })
-        
+      if (error.code === "auth/email-already-in-use") {
+        toast.error('You are already a user, Please login', {
+          position: 'top-center',
+        });
       }
+      
     }
   };
 
