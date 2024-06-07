@@ -1,4 +1,7 @@
 import React from 'react';
+import { auth } from '../../firebase/config';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
 
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';
@@ -7,6 +10,12 @@ import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 function Header() {
+const history = useNavigate()
+  const handleLogout=()=>{
+    signOut(auth).then(()=>{
+      history('/login');
+    });
+  }
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -34,7 +43,7 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>Login</span>
+          <Link onClick={handleLogout}>logout</Link>
           <hr />
         </div>
 
