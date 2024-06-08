@@ -1,11 +1,14 @@
 import React from "react";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider } from "./Store/AuthContext";
+import PostProvider from "./Store/PostContext";
 import AppRouter from "./AppRouter";
 
 function App() {
   return (
     <AuthProvider>
-      <AppRouter />
+      <PostProvider>
+        <AppRouter />
+      </PostProvider>
     </AuthProvider>
   );
 }

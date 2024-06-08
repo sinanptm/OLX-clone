@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { useAuth } from './AuthContext';
+import { useAuth } from './Store/AuthContext';
 import { BeatLoader } from "react-spinners";
 
 const Login = lazy(() => import("./Pages/Login"));
@@ -29,11 +29,11 @@ const AppRouter = () => {
 
   const router = createBrowserRouter([
     { path: "/", element: user ? <Navigate to="/home" /> : <Login /> },
-    { path: "/home", element: <Home /> },
-    { path: "/create", element: user ? <Create /> : <Navigate to="/login" /> },
-    { path: "/viewpost", element: user ? <ViewPost /> : <Navigate to="/login" /> },
     { path: "/login", element: user ? <Navigate to="/home" /> : <Login /> },
     { path: "/signup", element: user ? <Navigate to="/home" /> : <Signup /> },    
+    { path: "/create", element: user ? <Create /> : <Navigate to="/login" /> },
+    { path: "/home", element: <Home /> },
+    { path: "/viewpost/:id", element:<ViewPost /> },
   ]);
 
   return (

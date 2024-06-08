@@ -4,7 +4,7 @@ import Header from '../HeaderFooter/Header';
 import { db, storage } from '../../firebase/config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { toast } from 'react-toastify';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../Store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { addDoc, collection } from 'firebase/firestore';
@@ -82,11 +82,11 @@ const Create = () => {
             console.log("Image Uploaded : " + downloadedURL);
 
             await addDoc(collection(db, 'products'), {
-              productName: productName,
-              place: place,
-              description: description,
-              category: category,
-              price: price,
+              place,
+              description,
+              category,
+              price,
+              name: productName,
               image: downloadedURL,
               userId: user.uid,
               createdAt: new Date().toDateString(),

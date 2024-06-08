@@ -1,37 +1,35 @@
-.moreView {
+.productParentDiv {
   margin: 16px 16px 24px;
   padding: 16px 16px 32px;
   background-color: #ebeeef;
   border-radius: 4px;
 }
 
-.heading {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
-.heading :first-child {
+
+.header span:first-child {
   font-size: 24px;
   color: #002f34;
 }
 
-.heading :last-child {
+.header span:last-child {
   font-size: 14px;
   color: #002f34;
 }
 
-.recommendations .cards {
+.productCards {
   display: flex;
-}
-
-.moreView .cards {
   white-space: nowrap;
   overflow-x: scroll;
   overflow-y: hidden;
 }
 
-.card {
+.productCard {
   margin-right: 15px;
   padding: 13px;
   max-width: 222px;
@@ -39,39 +37,48 @@
   height: 270px;
   display: inline-block;
   cursor: pointer;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card .favorite {
+.favoriteIcon {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.card .image {
+.productImage {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100px;
 }
 
-.card .image img {
-  height: 100px;
+.productImage img {
   max-width: 100%;
   max-height: 100%;
-  min-height: 100%;
-  text-align: center;
 }
-.card .content .rate {
+
+.productContent .price {
   margin-top: 10px;
   font-size: larger;
   font-weight: bold;
 }
-.card .content .kilometer {
-  font-size: medium;
+
+.productContent .category {
+  font-size: x-large;
 }
-.card .content .name {
-  font-size: small;
+
+.productContent .productName,
+.productContent .productDescription {
+  font-size: large;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.card .date {
+
+.datePosted {
   display: flex;
   justify-content: flex-end;
   font-size: small;
@@ -81,7 +88,7 @@
   margin: 16px 16px 24px;
 }
 
-.recommendations .heading span {
+.recommendations .header span {
   font-size: 24px;
   color: #002f34;
 }

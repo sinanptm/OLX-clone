@@ -9,7 +9,7 @@ import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
-import { useAuth } from '../../AuthContext'
+import { useAuth } from '../../Store/AuthContext'
 function Header() {
   const navigate = useNavigate(); // Renamed from 'history' to 'navigate' for clarity
 
