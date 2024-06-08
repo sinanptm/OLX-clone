@@ -11,12 +11,13 @@ import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 import { useAuth } from '../../AuthContext'
 function Header() {
-const history = useNavigate()
-  const handleLogout=()=>{
-    signOut(auth).then(()=>{
-      history('/login');
+  const navigate = useNavigate(); // Renamed from 'history' to 'navigate' for clarity
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      navigate('/login'); // Use navigate function to redirect to '/login' route
     });
-  }
+  };
 
   const { user } = useAuth();
 

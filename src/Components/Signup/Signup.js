@@ -55,6 +55,7 @@ export default function Signup() {
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      userCredential.user.displayName = userName
       await setDoc(doc(db, 'users', user.uid), {
         userName,
         email,

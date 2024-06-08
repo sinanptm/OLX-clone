@@ -10,16 +10,7 @@ const Signup = lazy(() => import("./Pages/Signup"));
 const Create = lazy(() => import("./Pages/Create"));
 
 const AppRouter = () => {
-  const { user } = useAuth();
-
-  const router = createBrowserRouter([
-    { path: "/", element: !user ? <Navigate to="/home" /> : <Login /> },
-    { path: "/home", element: <Home /> },
-    { path: "/create", element: <Create /> },
-    { path: "/viewpost", element: <ViewPost /> },
-    { path: "/login", element: !user ? <Navigate to="/home" /> : <Login /> },
-    { path: "/signup", element: !user ? <Navigate to="/home" /> : <Signup /> },    
-  ]);
+  const { user, loading } = useAuth();
 
   const spinnerStyle = {
     display: "flex",
@@ -27,6 +18,23 @@ const AppRouter = () => {
     alignItems: "center",
     height: "100vh"
   };
+
+  if (loading) {
+    return (
+      <div style={spinnerStyle}>
+        <BeatLoader size={15} color={"#123abc"} />
+      </div>
+    );
+  }
+
+  const router = createBrowserRouter([
+    { path: "/", element: user ? <Navigate to="/home" /> : <Login /> },
+    { path: "/home", element: <Home /> },
+    { path: "/create", element: user ? <Create /> : <Navigate to="/login" /> },
+    { path: "/viewpost", element: user ? <ViewPost /> : <Navigate to="/login" /> },
+    { path: "/login", element: user ? <Navigate to="/home" /> : <Login /> },
+    { path: "/signup", element: user ? <Navigate to="/home" /> : <Signup /> },    
+  ]);
 
   return (
     <Suspense fallback={
