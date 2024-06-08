@@ -64,6 +64,7 @@ export default function Signup() {
 
       toast.success("Registered successfully",{
         position:'top-center',
+        autoClose: 1200,
       })
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {

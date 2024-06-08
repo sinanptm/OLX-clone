@@ -24,9 +24,11 @@ function Header() {
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
-        <div className="brandName">
-          <OlxLogo></OlxLogo>
-        </div>
+        <Link to={'/home'}>
+          <div className="brandName">
+            <OlxLogo></OlxLogo>
+          </div>
+        </Link>
         <div className="placeSearch">
           <Search></Search>
           <input type="text" />
@@ -49,7 +51,7 @@ function Header() {
         </div>
         <div className="loginPage">
           {
-            user? (
+            user ? (
               <Link onClick={handleLogout}>logout</Link>
             ) : (
               <Link to="/login">login</Link>
@@ -58,13 +60,15 @@ function Header() {
           <hr />
         </div>
 
-        <div className="sellMenu">
-          <SellButton></SellButton>
-          <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+        <Link to={'/create'}>
+          <div className="sellMenu">
+            <SellButton></SellButton>
+            <div className="sellMenuContent">
+              <SellButtonPlus></SellButtonPlus>
+              <span>SELL</span>
+            </div>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

@@ -1,94 +1,28 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './Create.css';
 import Header from '../HeaderFooter/Header';
-import { storage } from '../../firebase/config';
+import { db, storage } from '../../firebase/config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
+import { addDoc, collection } from 'firebase/firestore';
 
 const Create = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [place, setPlace] = useState('');
-  const [description, setDescription] = useState('');
-  const [productName, setProductName] = useState('');
-  const [category, setCategory] = useState('');
-  const [price, setPrice] = useState('');
-  const [image, setImage] = useState('');
-  const [images, setImages] = useState({});
-  const [error, setError] = useState({
+  const [formData, setFormData] = useState({
     productName: '',
     place: '',
     description: '',
     category: '',
-    price: ''
+    price: '',
+    image: null,
   });
-
-
-  const checkError = useCallback((name, value) => {
-    switch (name) {
-      case 'productName':
-        if (value.trim().length === 0) setError((prevErrors) => ({ ...prevErrors, productName: "Product name is required" }));
-        else setError((prevErrors) => ({ ...prevErrors, productName: "" }));
-        break;
-      case 'place':
-        if (value.trim().length === 0) setError((prevErrors) => ({ ...prevErrors, place: "Place is required" }));
-        else setError((prevErrors) => ({ ...prevErrors, place: "" }));
-        break;
-      case 'description':
-        if (value.trim().length === 0) setError((prevErrors) => ({ ...prevErrors, description: "Description is required" }));
-        else setError((prevErrors) => ({ ...prevErrors, description: "" }));
-        break;
-      case 'category':
-        if (value.trim().length === 0) setError((prevErrors) => ({ ...prevErrors, category: "Category is required" }));
-        else setError((prevErrors) => ({ ...prevErrors, category: "" }));
-        break;
-      case 'price':
-        if (value.trim().length === 0) setError((prevErrors) => ({ ...prevErrors, price: "Price is required" }));
-        else setError((prevErrors) => ({ ...prevErrors, price: "" }));
-        break;
-      default:
-        setError({
-          productName: '',
-          place: '',
-          description: '',
-          category: '',
-          price: ''
-        });
-        break;
-    }
-  }, []);
-
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setError((prevErrors) => ({ ...prevErrors, [name]: '' }));
-    switch (name) {
-      case 'productName':
-        setProductName(value);
-        checkError(name, value);
-        break;
-      case 'place':
-        setPlace(value);
-        checkError(name, value);
-        break;
-      case 'description':
-        setDescription(value);
-        checkError(name, value);
-        break;
-      case 'category':
-        setCategory(value);
-        checkError(name, value);
-        break;
-      case 'price':
-        setPrice(value);
-        checkError(name, value);
-        break;
-      default:
-        break;
-    }
-  };
+  // eslint-disable-next-line
+  const [images, setImages] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!loading && !user) {
@@ -97,150 +31,130 @@ const Create = () => {
   }, [user, loading, navigate]);
 
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      if (!error.category && !error.description && !error.productName && !error.place && !error.price && category.length > 0 && place.length > 0 && place.length > 0 && productName.length > 0 && image.length > 0) {
-        setCategory('')
-        setDescription('')
-        setProductName('')
-        setPlace('')
-        setPrice('')
-        setImage('')
-
-        const storageRef = ref(storage, image.name);
-        const uploadTask = uploadBytesResumable(storageRef, image);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("upload is" + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload paused");
-                break;
-              case "running":
-                console.log("Upload running");
-                break;
-              default:
-                break;
-            }
-          },
-          (error) => {
-            console.log(error);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadedURL) => {
-              setImages((prev) => ({ ...prev, img: downloadedURL }));
-              console.log(images);
-            });
-          }
-        );
-      } else {
-        toast.error("Please Fill the Form");
+  // eslint-disable-next-line
+  const validateInput = useCallback(
+    debounce((name, value) => {
+      let error = '';
+      if (!value.trim()) {
+        error = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
       }
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    }, 300), [debounce]
+  );
+
+
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    validateInput(name, value);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({ ...prevData, image: file }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { productName, place, description, category, price, image } = formData;
+
+    if (Object.values(errors).some((error) => error) || !productName || !place || !description || !category || !price || !image) {
+      toast.error("Please fill out all required fields");
+      return;
+    }
+
+    try {
+      const storageRef = ref(storage, `images/${image.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.log(error);
+          toast.error("Image upload failed");
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadedURL) => {
+            setImages((prev) => ({ ...prev, img: downloadedURL }));
+            console.log("Image Uploaded : " + downloadedURL);
+
+            await addDoc(collection(db, 'products'), {
+              productName: productName,
+              place: place,
+              description: description,
+              category: category,
+              price: price,
+              image: downloadedURL,
+              userId: user.uid,
+              createdAt: new Date().toDateString(),
+            })
+          });
+          toast.success("Product created successfully");
+          setFormData({
+            productName: '',
+            place: '',
+            description: '',
+            category: '',
+            price: '',
+            image: null,
+          });
+          document.getElementById('image').value = '';
+        }
+      );
+
+      setFormData({
+        productName: '',
+        place: '',
+        description: '',
+        category: '',
+        price: '',
+        image: null,
+      });
+
     } catch (error) {
       console.log(error);
+      toast.error("Form submission failed");
     }
   };
 
+  const { image } = formData;
 
   return (
     <>
       <Header />
       <div className="card">
         <div className="centerDiv">
-          <form>
-            <label htmlFor="productName">Product Name &nbsp;&nbsp;&nbsp;
-              <span style={{ color: 'red', fontSize: '11px' }}>
-                {error.productName ? `(${error.productName})` : ''}
-              </span>
-            </label>
+          <form onSubmit={handleSubmit}>
+            {['productName', 'place', 'description', 'category', 'price'].map((field) => (
+              <div key={field}>
+                <label htmlFor={field}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                  <span style={{ color: 'red', fontSize: '11px' }}>
+                    {errors[field] ? `(${errors[field]})` : ''}
+                  </span>
+                </label>
+                <br />
+                <input
+                  className="createInput"
+                  type={field === 'price' ? 'number' : 'text'}
+                  id={field}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleInputChange}
+                />
+                <br />
+              </div>
+            ))}
+            <label htmlFor="image">Image</label>
             <br />
-            <input
-              className="createInput"
-              type="text"
-              required
-              id="productName"
-              name="productName"
-              value={productName}
-              onChange={handleInputChange}
-            />
+            <input type="file" id="image" onChange={handleFileChange} required />
             <br />
-            <label htmlFor="place">Place &nbsp;&nbsp;&nbsp;
-              <span style={{ color: 'red', fontSize: '11px' }}>
-                {error.place ? `(${error.place})` : ''}
-              </span>
-            </label>
+            {image && <img alt="Posts" width="200px" height="200px" src={URL.createObjectURL(image)} />}
             <br />
-            <input
-              className="createInput"
-              type="text"
-              id="place"
-              required
-              name="place"
-              value={place}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label htmlFor="description">Description &nbsp;&nbsp;&nbsp;
-              <span style={{ color: 'red', fontSize: '11px' }}>
-                {error.description ? `(${error.description})` : ''}
-              </span>
-            </label>
-            <br />
-            <input
-              className="createInput"
-              type="text"
-              id="description"
-              required
-              name="description"
-              value={description}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label htmlFor="category">Category &nbsp;&nbsp;&nbsp;
-              <span style={{ color: 'red', fontSize: '11px' }}>
-                {error.category ? `(${error.category})` : ''}
-              </span>
-            </label>
-            <br />
-            <input
-              className="createInput"
-              type="text"
-              id="category"
-              name="category"
-              value={category}
-              required
-              onChange={handleInputChange}
-            />
-            <br />
-            <label htmlFor="price">Price &nbsp;&nbsp;&nbsp;
-              <span style={{ color: 'red', fontSize: '11px' }}>
-                {error.price ? `(${error.price})` : ''}
-              </span>
-            </label>
-            <br />
-            <input
-              className="createInput"
-              required
-              type="number"
-              id="price"
-              name="price"
-              value={price}
-              onChange={handleInputChange}
-            />
-            <br />
-            <br />
-            <img alt="Posts" width="200px" height="200px" src={image ? URL.createObjectURL(image) : ''} />
-            <br />
-            <input onChange={(e) => {
-              setImage(e.target.files[0])
-            }} type="file" required />
-            <br />
-            <button className="uploadBtn" type='submit' onClick={handleSubmit}>Upload and Submit</button>
-
+            <button className="uploadBtn" type="submit">Upload and Submit</button>
           </form>
         </div>
       </div>
