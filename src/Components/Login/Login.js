@@ -9,35 +9,37 @@ import { toast } from 'react-toastify';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!email.trim()) {
       toast.error("Please enter your email", { position: "top-right" });
       return;
     }
-  
+
     if (!password.trim()) {
       toast.error("Please enter your password", { position: "top-right" });
       return;
     }
-  
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success("✅ Logged in ", { position: "top-right" ,autoClose: 2000});
-  
+      toast.success("✅ Logged in ", { position: "top-right", autoClose: 2000 });
+
     } catch (error) {
-      if(error.code === 'auth/invalid-credential')
+      if (error.code === 'auth/invalid-credential')
         toast.error("Email or Password is incorrect", { position: "top-right" });
       else toast.error(error.code)
     }
-  };  
+  };
 
   return (
     <div>
       <div className="loginParentDiv">
-        <img width="290px" height="250px" alt="Olx-logo" src={Logo}></img>
+      <Link to={'/home'}>
+      <img width="290px" height="250px" src={Logo} alt="OLX Logo" />
+      </Link>
         <form onSubmit={handleSubmit}>
           <label htmlFor="fname">Email</label>
           <br />

@@ -29,16 +29,16 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError({});
-  
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
     try {
       // Validate form fields
       if (!userName.trim()) {
         setError({ field: 'userName', message: 'Username is required' });
         return;
       }
-  
+
       if (!email.trim()) {
         setError({ field: 'email', message: 'Email is required' });
         return;
@@ -46,7 +46,7 @@ export default function Signup() {
         setError({ field: 'email', message: 'Invalid email format' });
         return;
       }
-  
+
       if (!phone.trim()) {
         setError({ field: 'phone', message: 'Phone number is required' });
         return;
@@ -54,7 +54,7 @@ export default function Signup() {
         setError({ field: 'phone', message: 'Phone number should be 10 digits' });
         return;
       }
-  
+
       if (!password.trim()) {
         setError({ field: 'password', message: 'Password is required' });
         return;
@@ -62,7 +62,7 @@ export default function Signup() {
         setError({ field: 'password', message: 'Password should be more than 6 characters' });
         return;
       }
-  
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       userCredential.user.displayName = userName;
@@ -71,7 +71,7 @@ export default function Signup() {
         email,
         phone
       });
-  
+
       toast.success("Registered successfully", {
         position: 'top-center',
         autoClose: 1200,
@@ -91,7 +91,9 @@ export default function Signup() {
 
   return (
     <div className="signupParentDiv">
+      <Link to={'/home'}>
       <img width="290px" height="250px" src={Logo} alt="OLX Logo" />
+      </Link>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username</label>
         <br />

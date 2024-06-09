@@ -2,21 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { Spinner } from '../../assets/Spinner';
 
 import './View.css';
-import { BeatLoader } from 'react-spinners';
 
 function View() {
   const [product, setProduct] = useState(null);
   const [seller, setSeller] = useState(null);
   const { id } = useParams();
-
-  const spinnerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh"
-  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -50,13 +43,7 @@ function View() {
   }, [id]);
 
 
-  if (!product) {
-    return (
-      <div style={spinnerStyle}>
-        <BeatLoader size={15} color={"#123abc"} />
-      </div>
-    );
-  }
+  if (!product) return <Spinner />
 
   return (
     <div className="viewParentDiv">

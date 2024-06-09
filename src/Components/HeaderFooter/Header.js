@@ -12,11 +12,11 @@ import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 
 function Header() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     signOut(auth).then(() => {
-      navigate('/login'); 
+      navigate('/login');
     });
   };
 
@@ -59,15 +59,15 @@ function Header() {
           }
           <hr />
         </div>
-          <Link to={'/create'}>
-            <div className="sellMenu">
-              <SellButton />
-              <div className="sellMenuContent">
-                <SellButtonPlus />
-                <span>SELL</span>
-              </div>
+        <Link to={'/create'}>
+          <div className="sellMenu">
+            <SellButton />
+            <div className="sellMenuContent">
+              <SellButtonPlus />
+              <span>SELL</span>
             </div>
-          </Link>
+          </div>
+        </Link>
       </div>
     </div>
   );
