@@ -28,51 +28,64 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError({}); 
-
+    setError({});
+  
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
     try {
       // Validate form fields
       if (!userName.trim()) {
         setError({ field: 'userName', message: 'Username is required' });
         return;
       }
+  
       if (!email.trim()) {
         setError({ field: 'email', message: 'Email is required' });
         return;
+      } else if (!emailPattern.test(email)) {
+        setError({ field: 'email', message: 'Invalid email format' });
+        return;
       }
+  
       if (!phone.trim()) {
         setError({ field: 'phone', message: 'Phone number is required' });
         return;
-      }
-      if (phone.length !== 10) {
+      } else if (phone.length !== 10) {
         setError({ field: 'phone', message: 'Phone number should be 10 digits' });
         return;
       }
+  
       if (!password.trim()) {
         setError({ field: 'password', message: 'Password is required' });
         return;
+      } else if (password.length <= 6) {
+        setError({ field: 'password', message: 'Password should be more than 6 characters' });
+        return;
       }
-
+  
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      userCredential.user.displayName = userName
+      userCredential.user.displayName = userName;
       await setDoc(doc(db, 'users', user.uid), {
         userName,
         email,
         phone
       });
-
-      toast.success("Registered successfully",{
-        position:'top-center',
+  
+      toast.success("Registered successfully", {
+        position: 'top-center',
         autoClose: 1200,
-      })
+      });
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         toast.error('You are already a user, Please login', {
           position: 'top-center',
         });
+      } else {
+        toast.error('Registration failed. Please try again.', {
+          position: 'top-center',
+        });
       }
-      
     }
   };
 

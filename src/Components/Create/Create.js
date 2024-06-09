@@ -30,20 +30,30 @@ const Create = () => {
     }
   }, [user, loading, navigate]);
 
-
-  // eslint-disable-next-line
+  // eslint-disable-next-line 
   const validateInput = useCallback(
     debounce((name, value) => {
       let error = '';
+
       if (!value.trim()) {
         error = `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
+      } else if (value.length < 2) {
+        error = `${name.charAt(0).toUpperCase() + name.slice(1)} must be more than 2 characters`;
       }
+
+      if (name === 'price') {
+        if (isNaN(value)) {
+          error = 'Price must be a number';
+        } else if (value <= 0) {
+          error = 'Price must be greater than zero';
+        }
+      }
+
       setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
-    }, 300), [debounce]
+    }, 300), []
   );
 
-
-  const handleInputChange = async (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     validateInput(name, value);
@@ -51,8 +61,15 @@ const Create = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prevData) => ({ ...prevData, image: file }));
+    if (file && file.type.startsWith('image/')) {
+      setFormData((prevData) => ({ ...prevData, image: file }));
+    } else {
+      toast.error('Please upload a valid image file');
+      setFormData((prevData) => ({ ...prevData, image: null }));
+      document.getElementById('image').value = '';
+    }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { productName, place, description, category, price, image } = formData;
@@ -90,29 +107,21 @@ const Create = () => {
               image: downloadedURL,
               userId: user.uid,
               createdAt: new Date().toDateString(),
-            })
+            });
+
+            toast.success("Product created successfully");
+            setFormData({
+              productName: '',
+              place: '',
+              description: '',
+              category: '',
+              price: '',
+              image: null,
+            });
+            document.getElementById('image').value = '';
           });
-          toast.success("Product created successfully");
-          setFormData({
-            productName: '',
-            place: '',
-            description: '',
-            category: '',
-            price: '',
-            image: null,
-          });
-          document.getElementById('image').value = '';
         }
       );
-
-      setFormData({
-        productName: '',
-        place: '',
-        description: '',
-        category: '',
-        price: '',
-        image: null,
-      });
 
     } catch (error) {
       console.log(error);
