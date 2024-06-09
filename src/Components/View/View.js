@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Spinner } from '../../assets/Spinner';
+import { usePost } from '../../Provider/PostContext';
 
 import './View.css';
 
@@ -10,31 +11,39 @@ function View() {
   const [product, setProduct] = useState(null);
   const [seller, setSeller] = useState(null);
   const { id } = useParams();
+  const { postDetails } = usePost();
+  
+  const fetchSeller = async (userId) => {
+    try {
+      const sellerDoc = await getDoc(doc(db, 'users', userId));
+      if (sellerDoc.exists()) {
+        setSeller(sellerDoc.data());
+      } else {
+        console.log('No such seller!');
+      }
+    } catch (error) {
+      console.log('Error fetching seller:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const fetchSeller = async (userId) => {
-          try {
-            const sellerDoc = await getDoc(doc(db, 'users', userId));
-            if (sellerDoc.exists()) {
-              setSeller(sellerDoc.data());
-            } else {
-              console.log('No such seller!');
-            }
-          } catch (error) {
-            console.log('Error fetching seller:', error);
-          }
-        };
 
-        const productDoc = await getDoc(doc(db, 'products', id));
-        if (productDoc.exists()) {
-          const productData = productDoc.data();
-          setProduct(productData);
-          await fetchSeller(productData.userId);
+        if (postDetails) {
+          setProduct(postDetails);
+          await fetchSeller(postDetails.userId);
         } else {
-          console.log('No such product!');
+          const productDoc = await getDoc(doc(db, 'products', id));
+          if (productDoc.exists()) {
+            const productData = productDoc.data();
+            setProduct(productData);
+            await fetchSeller(productData.userId);
+          } else {
+            console.log('No such product!');
+          }
         }
+
       } catch (error) {
         console.log('Error fetching product:', error);
       }

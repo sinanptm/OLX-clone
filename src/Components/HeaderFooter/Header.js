@@ -2,7 +2,7 @@ import React from 'react';
 import { auth } from '../../firebase/config';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { useAuth } from '../../Store/AuthContext'
+import { useAuth } from '../../Provider/AuthContext'
 
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../olx-logo.png';
-import './Signup.css';
+import Logo from '../../olx-logo.png';  
+import './Signup.css';  
 import { auth, db } from '../../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -65,7 +65,6 @@ export default function Signup() {
 
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      userCredential.user.displayName = userName;
       await setDoc(doc(db, 'users', user.uid), {
         userName,
         email,
@@ -92,7 +91,7 @@ export default function Signup() {
   return (
     <div className="signupParentDiv">
       <Link to={'/home'}>
-      <img width="290px" height="250px" src={Logo} alt="OLX Logo" />
+        <img width="290px" height="250px" src={Logo} alt="OLX Logo" />
       </Link>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username</label>
@@ -145,7 +144,7 @@ export default function Signup() {
           required
         />
         <br />
-        {error.message && <div className="error">{error.message}</div>} {/* Render error message */}
+        {error.message && <div className="error">{error.message}</div>}
         <button type="submit">Signup</button>
       </form>
       <Link to={'/login'}>Login</Link>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import { usePost } from '../../Store/PostContext';
+import { usePost } from '../../Provider/PostContext';
 import Heart from '../../assets/Heart';
 import './Post.css';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function Products() {
   const [products, setProducts] = useState([]);
   const [likes, setLikes] = useState({});
-  const { setPostDetals } = usePost();
+  const { setPostDetails } = usePost();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +17,9 @@ function Products() {
       try {
         const querySnapshot = await getDocs(collection(db, 'products'));
         const productsList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        
         setProducts(productsList);
-        // Initialize likes state
+
         const initialLikes = {};
         productsList.forEach(product => {
           initialLikes[product.id] = false;
@@ -32,7 +33,7 @@ function Products() {
   }, []);
 
   const handlePostClick = (product) => {
-    setPostDetals(product);
+    setPostDetails(product);
     navigate(`/viewpost/${product.id}`);
   };
 

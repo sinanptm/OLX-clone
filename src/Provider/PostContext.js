@@ -7,8 +7,8 @@ export const usePost = () => {
 };
 
 const Post = ({ children }) => {
-    const [postDetals,setPostDetals] = useState();
-    return <PostContext.Provider value={{postDetals,setPostDetals}}> {children}  </PostContext.Provider>
+    const [postDetails,setPostDetails] = useState();
+    return <PostContext.Provider value={{postDetails,setPostDetails}}> {children}  </PostContext.Provider>
 }
 
 export default Post;

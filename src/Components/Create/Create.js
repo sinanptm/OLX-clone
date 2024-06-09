@@ -4,7 +4,7 @@ import Header from '../HeaderFooter/Header';
 import { db, storage } from '../../firebase/config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { toast } from 'react-toastify';
-import { useAuth } from '../../Store/AuthContext';
+import { useAuth } from '../../Provider/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { addDoc, collection } from 'firebase/firestore';

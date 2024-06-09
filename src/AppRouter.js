@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { useAuth } from './Store/AuthContext';
+import { useAuth } from './Provider/AuthContext';
 import { Spinner } from "./assets/Spinner";
 
 
