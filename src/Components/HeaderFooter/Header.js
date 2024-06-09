@@ -2,6 +2,7 @@ import React from 'react';
 import { auth } from '../../firebase/config';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
+import { useAuth } from '../../Store/AuthContext'
 
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';
@@ -9,15 +10,17 @@ import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
-import { useAuth } from '../../Store/AuthContext'
+
 function Header() {
-  const navigate = useNavigate(); // Renamed from 'history' to 'navigate' for clarity
+  const navigate = useNavigate(); 
 
   const handleLogout = () => {
     signOut(auth).then(() => {
-      navigate('/login'); // Use navigate function to redirect to '/login' route
+      navigate('/login'); 
     });
   };
+
+
 
   const { user } = useAuth();
 
@@ -26,49 +29,45 @@ function Header() {
       <div className="headerChildDiv">
         <Link to={'/home'}>
           <div className="brandName">
-            <OlxLogo></OlxLogo>
+            <OlxLogo />
           </div>
         </Link>
-        <div className="placeSearch">
-          <Search></Search>
-          <input type="text" />
-          <Arrow></Arrow>
+        <div className="placeSearch" >
+          <Search />
+          <input type="text" placeholder="Search city, area or locality" />
+          <Arrow />
         </div>
         <div className="productSearch">
           <div className="input">
-            <input
-              type="text"
-              placeholder="Find car,mobile phone and more..."
-            />
+            <input type="text" placeholder="Find car, mobile phone and more..." />
           </div>
           <div className="searchAction">
-            <Search color="#ffffff"></Search>
+            <Search color="#ffffff" />
           </div>
         </div>
         <div className="language">
           <span> ENGLISH </span>
-          <Arrow></Arrow>
+          <Arrow />
         </div>
         <div className="loginPage">
           {
             user ? (
-              <Link onClick={handleLogout}>logout</Link>
+              <Link onClick={handleLogout}>Logout</Link>
             ) : (
-              <Link to="/login">login</Link>
+              <Link to="/login">Login</Link>
             )
           }
           <hr />
         </div>
-
-        <Link to={'/create'}>
-          <div className="sellMenu">
-            <SellButton></SellButton>
-            <div className="sellMenuContent">
-              <SellButtonPlus></SellButtonPlus>
-              <span>SELL</span>
+          <Link to={'/create'}>
+            <div className="sellMenu">
+              <SellButton />
+              <div className="sellMenuContent">
+                <SellButtonPlus />
+                <span>SELL</span>
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const [likes, setLikes] = useState({});
   const { setPostDetals } = usePost();
   const navigate = useNavigate();
 
@@ -17,6 +18,12 @@ function Products() {
         const querySnapshot = await getDocs(collection(db, 'products'));
         const productsList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setProducts(productsList);
+        // Initialize likes state
+        const initialLikes = {};
+        productsList.forEach(product => {
+          initialLikes[product.id] = false;
+        });
+        setLikes(initialLikes);
       } catch (error) {
         console.log('Error in fetching products', error);
       }
@@ -24,23 +31,30 @@ function Products() {
     fetchProducts();
   }, []);
 
-  const handlePostClick = (product)=>{
-    setPostDetals(products)
-    navigate(`/viewpost/${product.id}`)
-  }
+  const handlePostClick = (product) => {
+    setPostDetals(product);
+    navigate(`/viewpost/${product.id}`);
+  };
+
+  const handleLike = (productId) => {
+    setLikes(prevLikes => ({
+      ...prevLikes,
+      [productId]: !prevLikes[productId]
+    }));
+  };
 
   return (
-    <div className="productParentDiv" >
+    <div className="productParentDiv">
       <div className="quickView">
         <div className="header">
           <span>Quick Menu</span>
-          <span>View more</span>
+          <span></span>
         </div>
         <div className="productCards">
-          {products.map(product => (
-            <div key={product.id} className="productCard" onClick={()=>handlePostClick(product)}>
-              <div className="favoriteIcon">
-                <Heart />
+          {products.map((product) => (
+            <div key={product.id} className="productCard" onClick={() => handlePostClick(product)}>
+              <div className="favoriteIcon" onClick={(e) => { e.stopPropagation(); handleLike(product.id); }}>
+                <Heart liked={likes[product.id]} />
               </div>
               <div className="productImage">
                 <img src={product.image} alt={product.name} />
@@ -61,23 +75,25 @@ function Products() {
         <div className="header">
           <span>Fresh recommendations</span>
         </div>
-        <div className="productCards">
-          <div className="productCard">
-            <div className="favoriteIcon">
-              <Heart></Heart>
+        <div className="recommendationsGrid">
+          {products.map((product) => (
+            <div key={product.id} className="productCard" onClick={() => handlePostClick(product)}>
+              <div className="favoriteIcon" onClick={(e) => { e.stopPropagation(); handleLike(product.id); }}>
+                <Heart liked={likes[product.id]} />
+              </div>
+              <div className="productImage">
+                <img src={product.image} alt={product.name} />
+              </div>
+              <div className="productContent">
+                <p className="price">&#x20B9; {product.price}</p>
+                <span className="category">{product.category}</span>
+                <p className="productName">{product.name}</p>
+              </div>
+              <div className="datePosted">
+                <span>{new Date(product.createdAt).toDateString()}</span>
+              </div>
             </div>
-            <div className="productImage">
-              <img src="../../../Images/R15V3.jpg" alt="Yamaha R15V3" />
-            </div>
-            <div className="productContent">
-              <p className="price">&#x20B9; 250000</p>
-              <span className="category">Two Wheeler</span>
-              <p className="productName">YAMAHA R15V3</p>
-            </div>
-            <div className="datePosted">
-              <span>10/5/2021</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

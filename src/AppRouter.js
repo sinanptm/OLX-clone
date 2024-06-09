@@ -28,12 +28,12 @@ const AppRouter = () => {
   }
 
   const router = createBrowserRouter([
-    { path: "/", element: user ? <Navigate to="/home" /> : <Login /> },
     { path: "/login", element: user ? <Navigate to="/home" /> : <Login /> },
-    { path: "/signup", element: user ? <Navigate to="/home" /> : <Signup /> },    
+    { path: "/signup", element: user ? <Navigate to="/home" /> : <Signup /> },
     { path: "/create", element: user ? <Create /> : <Navigate to="/login" /> },
-    { path: "/home", element: <Home /> },
-    { path: "/viewpost/:id", element:<ViewPost /> },
+    { path: "/home", element: <Home /> },    
+    { path: "/viewpost/:id", element: <ViewPost /> },
+    { path: "/", element: <Home /> },
   ]);
 
   return (

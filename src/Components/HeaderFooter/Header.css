@@ -2,7 +2,7 @@
   padding: 10px;
   background-color: whitesmoke;
   position: fixed;
-  width: 99vw;
+  width: 100vw;
   z-index: 999;
 }
 
@@ -35,7 +35,8 @@
 }
 
 .productSearch {
-  width: 35em;
+  width: 50em;
+  margin-left: 0;
   height: 48px;
   border: 2px solid #002f34;
   border-radius: 4px;
@@ -119,6 +120,7 @@
 .sellMenu {
   position: relative;
   cursor: pointer;
+  margin-right: 30px;
 }
 
 .sellMenu .all {
@@ -148,9 +150,9 @@
   color: #002f34;
 }
 
-/* .sellMenu .sellMenuContent svg {
+.sellMenu .sellMenuContent svg {
   align-items: center;
-} */
+}
 .sellMenu .sellMenuContent span {
   margin-left: 5px;
 }
