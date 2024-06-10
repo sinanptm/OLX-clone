@@ -3,7 +3,7 @@ import { AuthProvider } from "./Provider/AuthContext";
 import PostProvider from "./Provider/PostContext";
 import AppRouter from "./AppRouter";
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <PostProvider>
