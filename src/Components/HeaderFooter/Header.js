@@ -12,17 +12,16 @@ import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 
 function Header() {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogOut = () => {
     signOut(auth).then(() => {
       navigate('/login');
     });
   };
 
 
-
-  const { user } = useAuth();
 
   return (
     <div className="headerParentDiv">
@@ -49,16 +48,25 @@ function Header() {
           <span> ENGLISH </span>
           <Arrow />
         </div>
-        <div className="loginPage">
-          {
-            user ? (
-              <Link onClick={handleLogout}>Logout</Link>
-            ) : (
-              <Link to="/login">Login</Link>
-            )
-          }
-          <hr />
-        </div>
+        {user ?
+          <div className="loginPage">
+            <img
+              width="40px"
+              height="40px"
+              src="https://external-preview.redd.it/LYMHylvGTOGWxcQgRKdZcAsyz4i6HGI01g-8hI9_IFw.jpg?auto=webp&s=c5fa678af27763e09c6e80c0aa6caa5c6d338ff9"
+              alt="logo"
+            />
+            <span>&nbsp;&nbsp;&nbsp;{user.displayName}</span>
+          </div> : <span style={{cursor:'pointer' , fontWeight:'bold', fontSize:'18px'}} onClick={() => navigate('/login')}>Login</span>
+        }
+
+        {user &&
+          <div className="loginPage">
+            <span style={{ cursor: 'pointer' }} onClick={handleLogOut}>Logout</span>
+            <hr />
+          </div>
+        }
+
         <Link to={'/create'}>
           <div className="sellMenu">
             <SellButton />

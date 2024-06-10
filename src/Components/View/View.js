@@ -26,6 +26,7 @@ function View() {
     }
   };
 
+  // eslint-disable-next-line
   useEffect(() => {
     const fetchProduct = async () => {
       try {
