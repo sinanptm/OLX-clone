@@ -5,8 +5,7 @@ import { usePost } from '../../Provider/PostContext';
 import Heart from '../../assets/Heart';
 import './Post.css';
 import { useNavigate } from 'react-router-dom';
-import { ShimmerSimpleGallery } from 'react-shimmer-effects';
-
+import PostsSkeleton from '../../assets/PostsSkelton.jsx'
 function Products() {
   const [products, setProducts] = useState([]);
   const [likes, setLikes] = useState({});
@@ -49,19 +48,17 @@ function Products() {
     <div className="productParentDiv">
       {
         products.length === 0 ? (
-          <div className='shimmer-container'>
-            <ShimmerSimpleGallery card imageHeight={200} caption />
-          </div>
+            <PostsSkeleton count={10}/>
         ) : (
           <>
             <div className="quickView">
               <div className="header">
-                <span>Quick Menu</span>
+                <span>Newest</span>
                 <span></span>
               </div>
               <div className="productCards">
                 {products.map((product) => (
-                  <div key={product.id} className="productCard" onClick={() => handlePostClick(product)}>
+                  <div key={product.id} className="productCardR" onClick={() => handlePostClick(product)}>
                     <div className="favoriteIcon" onClick={(e) => { e.stopPropagation(); handleLike(product.id); }}>
                       <Heart liked={likes[product.id]} />
                     </div>

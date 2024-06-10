@@ -12,9 +12,9 @@
     "npm": "^10.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-loading-skeleton": "^3.4.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
-    "react-shimmer-effects": "^1.0.3",
     "react-spinners": "^0.13.8",
     "react-toastify": "^10.0.5",
     "web-vitals": "^4.0.1"

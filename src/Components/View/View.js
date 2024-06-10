@@ -26,7 +26,6 @@ function View() {
     }
   };
 
-  // eslint-disable-next-line
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -50,9 +49,10 @@ function View() {
       }
     };
     fetchProduct();
+  // eslint-disable-next-line
   }, [id]);
 
-
+  
   if (!product) return <Spinner />
 
   return (

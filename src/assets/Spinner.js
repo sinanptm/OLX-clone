@@ -1,4 +1,5 @@
 import { BeatLoader } from "react-spinners";
+import React from "react";
 
 
 const spinnerStyle = {
